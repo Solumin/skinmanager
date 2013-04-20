@@ -45,6 +45,41 @@ def add(&blk)
 	end
 end
 
+def remove(&blk)
+	@name = ""
+	if @@mann.list.empty?
+		alert "There are no skins that can be activated."
+		return 
+	end
+
+	dialog :width => 250, :height => 150 do
+		stack :width => "100%", :margin => 15 do
+			para "Skin Name: ", :margin_right => 20
+			@name_box = list_box :items => @@mann.list
+
+			flow :width => "100%" do
+				button "Remove", :margin_right => 20 do
+					@name = @name_box.text
+					if @name.nil?
+						alert "Please select a skin."
+						return 
+					end
+					begin
+						@@mann.remove_skin(@name)
+					rescue => e
+						alert e.message
+					end
+					blk.call
+					close
+				end
+				button "Cancel" do
+					close
+				end
+			end
+		end
+	end
+end
+
 def activate(&blk)
 	@name = ""
 	if @@mann.inactive.empty?
@@ -147,18 +182,16 @@ Shoes.app :width => 400, :height => 200, :scroll => false do
 				add{@list_para.text = format_skin_list}
 			end.focus
 			button "Remove Skin", :width => "80%", :margin => 10 do
-				alert ("This would start the remove process")
-				#remove{@list_para.text = format_skin_list}
+				# alert ("This would start the remove process")
+				remove{@list_para.text = format_skin_list}
 			end
 			button "Activate Skin", :width => "80%", :margin => 10 do
 				# alert ("This would install a skin")
 				activate {@list_para.text = format_skin_list}
-				info "Activated a skin, update list!"
 			end
 			button "Deactivate Skin", :width => "80%", :margin => 10 do
 				# alert ("This would remove an installed skin")
 				deactivate{@list_para.text = format_skin_list}
-				info "Deactivated a skin, update list!"
 			end
 		end
 	end
