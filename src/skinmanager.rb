@@ -31,7 +31,13 @@ module SkinManager
 	# 	puts "Loaded skin!"
 	# 	ap mann.list
 	# end
-	puts "\nActive skins:"
-	ap mann.active
+	# puts "\nActive skins:"
+	# ap mann.active
+
+	# puts "\n\nActivating skin:"
+	# mann.activate_skin("Eternal-Youth-Maiden")
+	# puts "Deactivating skin"
+	# mann.deactivate_skin("Eternal-Youth-Maiden")
+
 	mann.save_skins
 end

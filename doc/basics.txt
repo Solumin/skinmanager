@@ -26,7 +26,7 @@ Deleting a skin
 2. Delete SKIN_MANN/SKIN_NAME dir
 3. Remove any remaining metadata
 
-activating a skin
+Activating a skin
 1. Grab list of files that skin uses/items that skin modifies
 2. Check if those files exist in Steam dir
 	a. If yes, query user: Overwrite existing files? ("Uninstall other skin first!")
@@ -34,7 +34,7 @@ activating a skin
 3. Copy files into Steam dir (merge tf/ directories)
 4. Mark skin as installed in SKIN_MANN logs
 
-Unactivating a skin
+Disactivating a skin
 1. Grap list of files that skin uses
 2. Double-check that those files exist (not really necessary)
 3. Delete files from Steam dir
