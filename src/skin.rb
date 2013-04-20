@@ -8,6 +8,7 @@ module SkinManager
 		include Enumerable
 
 		def initialize(name, files)
+			raise ArgumentError unless name.is_a? String
 			@name = name
 			@files = files
 			@active = false
@@ -24,6 +25,10 @@ module SkinManager
 
 		def active?
 			@active
+		end
+
+		def to_s
+			@name
 		end
 	end
 end

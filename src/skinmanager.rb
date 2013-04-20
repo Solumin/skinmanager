@@ -5,8 +5,6 @@ require "exceptions"
 require "manager"
 require "skin"
 
-require "ap"
-
 module SkinManager
 	begin
 		AppCon.test
@@ -24,7 +22,7 @@ module SkinManager
 	mann = Manager.instance
 	# begin
 	# mann.add_skin("Eternal-Youth-Maiden", "E:\\My Documents\\GitHub\\skinmanager\\test\\skins\\Eternal-Youth-Maiden")
-	mann.remove_skin("Eternal-Youth-Maiden")
+	# mann.remove_skin("Eternal-Youth-Maiden")
 	
 	# rescue => e
 	# 	puts "Couldn't load skin :("
@@ -39,7 +37,7 @@ module SkinManager
 	# puts "\n\nActivating skin:"
 	# mann.activate_skin("Eternal-Youth-Maiden")
 	# puts "Deactivating skin"
-	# mann.deactivate_skin("Eternal-Youth-Maiden")
+	mann.deactivate_skin("EYM")
 
 	# mann.save_skins
 end

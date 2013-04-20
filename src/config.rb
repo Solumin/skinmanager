@@ -12,6 +12,7 @@ module SkinManager
 		module_function
 		def AppCon.test
 			raise Exceptions::ConfigError, "Team Fortress 2 directory (#{TF_DIR}) does not exist" unless (File.directory? TF_DIR)
+			raise Exceptions::ConfigError, "Data storage directory (#{DATA_DIR}) does not exist" unless (File.directory? DATA_DIR)
 			raise Exceptions::ConfigError, "Skin storage directory (#{SKIN_DIR}) does not exist" unless (File.directory? SKIN_DIR)
 		end
 	end

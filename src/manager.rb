@@ -34,7 +34,7 @@ module SkinManager
 		
 		def add_skin(name, dir)
 			puts "Adding skin..."
-			raise ArgumentError, "#{dir} does not exist" unless Dir.exists? dir
+			raise IOError, "#{dir} does not exist" unless Dir.exists? dir
 
 			# First use case: Skin has root "tf" directory structure
 			tf_dir = File.join(dir, "tf")
@@ -141,9 +141,11 @@ module SkinManager
 		end
 
 		def active
-			@skins.select { |s|
-				s.name if s.active?
-			}
+			@skins.select { |s| s.active? }.map(&:name)
+		end
+
+		def inactive
+			@skins.select { |s| !s.active? }.map(&:name)
 		end
 
 		private
