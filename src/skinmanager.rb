@@ -23,7 +23,9 @@ module SkinManager
 
 	mann = Manager.instance
 	# begin
-	# 	mann.add_skin("Eternal-Youth-Maiden", "E:\\My Documents\\GitHub\\skinmanager\\test\\skins\\Eternal-Youth-Maiden")
+	# mann.add_skin("Eternal-Youth-Maiden", "E:\\My Documents\\GitHub\\skinmanager\\test\\skins\\Eternal-Youth-Maiden")
+	mann.remove_skin("Eternal-Youth-Maiden")
+	
 	# rescue => e
 	# 	puts "Couldn't load skin :("
 	# 	puts e.message
@@ -39,5 +41,5 @@ module SkinManager
 	# puts "Deactivating skin"
 	# mann.deactivate_skin("Eternal-Youth-Maiden")
 
-	mann.save_skins
+	# mann.save_skins
 end

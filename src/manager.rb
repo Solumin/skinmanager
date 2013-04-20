@@ -22,6 +22,7 @@ module SkinManager
 			end
 
 			@skin_list.reject! { |s| !File.exists?(File.join(AppCon::SKIN_DIR, s))}
+			_save_skin_list
 
 			@skins = @skin_list.map do |s|
 				puts "Loading #{s}..."
@@ -37,7 +38,7 @@ module SkinManager
 
 			# First use case: Skin has root "tf" directory structure
 			tf_dir = File.join(dir, "tf")
-			puts "Looking for tf folder (#{tf_dir})"
+			puts "Analyzing directory structure..."
 			if Dir.exists? tf_dir
 				sdir = File.join(AppCon::SKIN_DIR, name)
 
@@ -46,23 +47,46 @@ module SkinManager
 					_remove_skin_from_lists(name)
 				else
 					puts "Copying skin to #{sdir}"
-					Dir.mkdir(sdir) unless Dir.exists? sdir
+					begin
+						Dir.mkdir(sdir) unless Dir.exists? sdir
+					rescue => e
+						puts "Error creating backup skin directory: #{e.message}"
+						puts "Could not add the skin."
+						return
+					end
 				end
 				FileUtils.cp_r(tf_dir, sdir)
 
 				process_skin name, sdir
 			else
-				raise ArgumentError, "#The skin couldn't be loaded due to file structure."
+				raise ArgumentError, "The skin couldn't be loaded due to file structure."
 			end
+		end
+
+		def remove_skin(skin)
+			if skin.is_a? String
+				idx = @skins.index { |s| s.name == skin}
+				raise ArgumentError, "#{skin} is not a known skin." if idx.nil?
+				skin = @skins[idx]
+			end
+
+			if skin.active?
+				deactivate_skin(skin)
+			end
+
+			FileUtils.remove_dir(skin.root_dir, :force => true)
+			_remove_skin_from_lists(skin)
 		end
 
 		def process_skin(name, sdir)
 			puts "Processing skin #{name} in #{sdir}"
-			files = Dir.chdir(sdir) {
-				Dir["tf/**/*"]
-			}
-			@skins << SkinManager::Skin.new(name, files)
+			# Grab the skin files, but with tf/ as the root
+			files = Dir.chdir(sdir) { Dir["tf/**/*"] }
+			skin = SkinManager::Skin.new(name, files)
+			@skins << skin
 			@skin_list << name
+			_save(skin)
+			_save_skin_list
 		end
 
 		def save_skins
@@ -70,9 +94,7 @@ module SkinManager
 			@skins.each do |skin|
 				_save(skin)
 			end
-			File.open(SKIN_LIST_FILE, "w") do |file|
-				file.puts YAML::dump(@skin_list)
-			end
+			_save_skin_list
 		end
 
 		def save_skin (skin_name)
@@ -93,7 +115,9 @@ module SkinManager
 			end
 
 			FileUtils.cp_r(File.join(skin.root_dir, "tf"), AppCon::TF_DIR)
+
 			skin.active = true
+			_save(skin)
 		end
 
 		def deactivate_skin(skin_name)
@@ -103,15 +127,13 @@ module SkinManager
 			skin = @skins[idx]
 			raise ArgumentError, "#{skin_name} is not active." if !skin.active?
 
-			del_files = []
-
-			skin.each do |f|
-				del_files << File.join(AppCon::TF_DIR, f)
-			end
+			# Expand the skin's file names
+			del_files = skin.map { |f| File.join(AppCon::TF_DIR, f) }
 
 			FileUtils.remove(del_files, :force => true)
 
 			skin.active = false
+			_save(skin)
 		end
 
 		def list
@@ -133,9 +155,21 @@ module SkinManager
 			end
 		end
 
-		def _remove_skin_from_lists(name)
-			@skins.reject! { |s| s.name == name}
-			@skin_list.reject! { |n| n == name}
+		def _save_skin_list
+			File.open(SKIN_LIST_FILE, "w") do |file|
+				file.puts YAML::dump(@skin_list)
+			end
+		end
+
+		def _remove_skin_from_lists(skin)
+			if skin.is_a? String
+				@skins.reject! { |s| s.name == skin}
+				@skin_list.reject! { |n| n == skin}
+			elsif skin.is_a? SkinManager::Skin
+				@skins.reject! { |s| s.name == skin.name}
+				@skin_list.reject! { |n| n == skin.name}
+			end
+			_save_skin_list
 		end
 	end
 end
