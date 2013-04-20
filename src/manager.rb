@@ -71,7 +71,7 @@ module SkinManager
 			end
 
 			if skin.active?
-				deactivate_skin(skin)
+				deactivate_skin(skin.name)
 			end
 
 			FileUtils.remove_dir(skin.root_dir, :force => true)
