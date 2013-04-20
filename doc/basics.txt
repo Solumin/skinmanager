@@ -1,0 +1,61 @@
+Adding new skin
+1. Download desired skin
+2. Extract to a directory
+3. Start Skin Manager, select "Add Skin"
+4. From directory-select dialog, select dir that skin was extracted to
+5. Skin Manager begins processing skin:
+	a. If `tf` folder is found in top level of dir:
+		1. Copy whole tf/ dir to SKIN_MANN/SKIN_NAME/ (disregard other folders!)
+		2. iterate through dirs/files, generating list of files comprising skin
+		3. write meta-file for skin (name, files?)
+	b. If multiple folders found on top level:
+		1. Ignore certain folders ("Screenshots", etc)
+		2. Query user for folder structure
+			e.g. dir has models and materials. "Do these go right under tf/ dir?"
+			basically, ask user to check README or other documentation
+		3. Restructure skin to tf/ structure in SKIN_MANN/SKIN_NAME dir
+		4. Proceed from step 2 of 5.a above.
+	c. No directories, just loose files on top level:
+		1. Query user for proper structure
+			e.g. "Does this file belong in models or materials? (or other?)"
+		2. Restructure skin to tf/ structure in SKIN_MANN/SKIN_NAME dir
+		3. Proceed from step 2 of 5.a above.
+
+Deleting a skin
+1. Uninstall skin if necessary
+2. Delete SKIN_MANN/SKIN_NAME dir
+3. Remove any remaining metadata
+
+activating a skin
+1. Grab list of files that skin uses/items that skin modifies
+2. Check if those files exist in Steam dir
+	a. If yes, query user: Overwrite existing files? ("Uninstall other skin first!")
+	b. Straight-up overwrite/uninstall previously installed skin if necessary
+3. Copy files into Steam dir (merge tf/ directories)
+4. Mark skin as installed in SKIN_MANN logs
+
+Unactivating a skin
+1. Grap list of files that skin uses
+2. Double-check that those files exist (not really necessary)
+3. Delete files from Steam dir
+4. Mark skin as uninstalled in SKIN_MANN logs
+
+---
+
+Skin:
+	- list of files
+	- name (must match skin's directory!)
+	? type (weapon/item? What it replaces?)
+Each skin resides in its own data/skins/SKIN_NAME directory.
+This directory has the marshall dump of the skin class that represents it
+and the tf/ folder of the actual skin files.
+
+Skin Manager:
+	- defines 4 operations given above
+	- maintains lists of installed/uninstalled skins
+
+---
+When adding a skin, user can select "one-time add" or "permanent add"
+	- one-time: No backup is made. Skin is automatically installed, can only be uninstalled and removed once.
+	- permanent: Backup of skin is made. Skin can be installed/uninstalled as many times as desired.
+		(Skin can still be automatically installed if user chooses.)
