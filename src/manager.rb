@@ -13,6 +13,8 @@ module SkinManager
 
 		SKIN_LIST_FILE = File.join(AppCon::DATA_DIR, "skinlist.yml")
 
+		MATS_AND_MODS = ["materials", "models"]
+
 		def initialize
 			@skin_list = []
 			if !File.exists? SKIN_LIST_FILE
@@ -37,9 +39,9 @@ module SkinManager
 			raise IOError, "#{dir} does not exist" unless Dir.exists? dir
 
 			# First use case: Skin has root "tf" directory structure
-			tf_dir = File.join(dir, "tf")
+
 			puts "Analyzing directory structure..."
-			if Dir.exists? tf_dir
+			if Dir.entries(dir).include? "tf"
 				sdir = File.join(AppCon::SKIN_DIR, name)
 
 				if Dir.exists? sdir
@@ -48,16 +50,37 @@ module SkinManager
 				else
 					puts "Copying skin to #{sdir}"
 					begin
-						Dir.mkdir(sdir) unless Dir.exists? sdir
+						Dir.mkdir(sdir)
 					rescue => e
 						puts "Error creating backup skin directory: #{e.message}"
 						puts "Could not add the skin."
 						return
 					end
 				end
-				FileUtils.cp_r(tf_dir, sdir)
+				FileUtils.cp_r(File.join(dir, "tf"), sdir)
 
 				process_skin name, sdir
+			elsif (Dir.entries(dir) & MATS_AND_MODS) == MATS_AND_MODS
+				puts "Detected materials/ and models/ folders."
+				sdir = File.join(AppCon::SKIN_DIR, name, "tf")
+
+				if Dir.exists? sdir
+					puts "Overwriting existing #{name} skin"
+					_remove_skin_from_lists(name)
+				else
+					puts "Copying skin to #{sdir}"
+					begin
+						FileUtils.mkdir_p(sdir)
+					rescue => e
+						puts "Error creating backup skin directory: #{e.message}"
+						puts "Could not add the skin."
+						return
+					end
+				end
+				cdirs = MATS_AND_MODS.map { |m| File.join(dir, m) }
+				FileUtils.cp_r(cdirs, sdir)
+
+				process_skin name, File.join(AppCon::SKIN_DIR, name)
 			else
 				raise ArgumentError, "The skin couldn't be loaded due to file structure."
 			end
