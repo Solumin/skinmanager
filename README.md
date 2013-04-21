@@ -6,8 +6,8 @@ If you want to install a custom skin or anything, you just need to drop the arch
 
 The upshot of this: The skinmanager is not needed. This is pretty disappointing, since I just started working on it a couple days ago.
 
-The current state of the repository can be considered version 1.0 of the Skin Manager. If it becomes apparent that something like this will still be useful,
-I'll probably continue development. I think it's an interesting project.
+The current state of the repository can be considered version 1.0 of the Skin Manager. If it becomes apparent that something like this will still be useful, I'll probably continue development. I think it's an interesting project.
+
 ---
 
 
