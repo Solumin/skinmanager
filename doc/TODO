@@ -1,0 +1,7 @@
+SkinManager TODO
+---
+- Third use case (loose files)
+- Look for other use cases
+	- possibly support a "general case", i.e. user defines where files/folders go
+- CLI (using Thor, or maybe just opt parse. Thor may be sledgehammer against fly.)
+	- a CLI would probably be much easier to package than a Shoes app, too...
